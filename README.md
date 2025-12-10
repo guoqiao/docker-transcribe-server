@@ -96,6 +96,15 @@ Returns:
 
 Interactive API documentation is available at `http://localhost:8000/docs` when the server is running.
 
+## Frontend Options
+
+For a complete speech-to-text experience, you can use these frontend applications that are compatible with this GLM-ASR server:
+
+- **[NeuralWhisper](https://github.com/lsj5031/NeuralWhisper)** - A modern web-based frontend for speech transcription with real-time capabilities
+- **[WhisperSqueak](https://github.com/lsj5031/WhisperSqueak)** - A lightweight desktop application for audio transcription
+
+Both frontends are designed to work seamlessly with this GLM-ASR server's OpenAI-compatible API endpoints.
+
 ## Model
 
 Uses the [GLM-ASR-Nano-2512](https://huggingface.co/zai-org/GLM-ASR-Nano-2512) model from the [ZAI organization](https://huggingface.co/zai-org), which provides efficient speech recognition with minimal computational overhead.
