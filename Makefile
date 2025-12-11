@@ -66,9 +66,6 @@ server:
 		${app}:latest \
 		server.py
 
-pytest:
-	pytest -svx --durations=0 --cache-clear tests/
-
 pre-commit-setup:
 	pip install -U pre-commit ruff
 	pre-commit install
