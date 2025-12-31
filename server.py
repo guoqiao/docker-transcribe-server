@@ -40,9 +40,7 @@ async def transcribe(
     # file.file: SpooledTemporaryFile
     audio_ndarray, sr = librosa.load(file.file, sr=16000)
     # path/ndarray/torch.Tensor
-    text = transcriber.transcribe(audio_ndarray, language=language, format=response_format)
-    logger.info(f"transcript:\n{text}\n")
-    return text
+    return transcriber.transcribe(audio_ndarray, language=language, format=response_format)
 
 
 if __name__ == "__main__":

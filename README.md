@@ -1,8 +1,10 @@
-# glm-asr-server
+# docker-transcribe-server
 
-OpenAI-compatible ASR/speech-to-text API server, powered by GLM-ASR-Nano model.
-
-Inspired by [faster-whisper-server](https://github.com/fedirz/faster-whisper-server).
+OpenAI Compatible Transcribe API Server.
+Supported models:
+- openai-whisper
+- faster-whisper
+- glm-asr-nano-2512
 
 ## Features
 
@@ -33,24 +35,6 @@ make server
 curl -X POST "http://localhost:8000/v1/audio/transcriptions" \
   -H "Content-Type: multipart/form-data" \
   -F "file=@audio.mp3"
-```
-
-### List Available Models
-
-```bash
-curl "http://localhost:8000/v1/models"
-```
-
-Returns:
-```json
-{
-  "data": [
-    {
-      "id": "glm-nano-2512",
-      "object": "model"
-    }
-  ]
-}
 ```
 
 ## API Documentation
