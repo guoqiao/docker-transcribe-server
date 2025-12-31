@@ -11,7 +11,8 @@ import librosa
 from fastapi import FastAPI, Form, File, UploadFile, HTTPException
 
 # from transcribers import GLMASRTranscriber as Transcriber
-from transcribers import WhisperTranscriber as Transcriber
+# from transcribers import WhisperTranscriber as Transcriber
+from transcribers import FasterWhisperTranscriber as Transcriber
 
 transcriber = Transcriber()
 
@@ -25,27 +26,15 @@ async def lifespan(app: FastAPI) -> None:
 app = FastAPI(lifespan=lifespan)
 
 
-@app.get("/v1/models")
-async def list_models() -> dict:
-    """List available models."""
-    return {"data": [{"id": "glm-nano-2512", "object": "model"}]}
-
-
-#@app.post("/v1/audio/transcriptions", response_model=TranscriptionResponse)
 @app.post("/v1/audio/transcriptions")
 async def transcribe(
     file: UploadFile = File(...),
-    model: Annotated[str, Form()] = "glm-nano-2512",  # only model, ommited
+    model: Annotated[str, Form()] = "whisper-1",  # placeholder
     language: Annotated[str, Form()] = None,
-    response_format: Annotated[str, Form()] = "text",  # {"text": "<transcript>"}
+    response_format: Annotated[str, Form()] = "text",  # text, srt, vtt
 ):
     """Transcribe audio file to text."""
     logger.info(f"{transcriber.__class__.__name__} transcribing {file.filename} -> language {language} format {response_format}")
-
-    try:
-        transcriber.clean_format(response_format)
-    except ValueError as e:
-        raise HTTPException(400, str(e))
 
     # load can accept a file-like object
     # file.file: SpooledTemporaryFile
@@ -53,10 +42,7 @@ async def transcribe(
     # path/ndarray/torch.Tensor
     text = transcriber.transcribe(audio_ndarray, language=language, format=response_format)
     logger.info(f"transcript:\n{text}\n")
-    if response_format == "json":
-        return {"text": text}
-    if response_format in ["text", "txt", "srt", "vtt"]:
-        return text
+    return text
 
 
 if __name__ == "__main__":

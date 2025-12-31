@@ -24,6 +24,7 @@ class Transcriber:
     supported_formats = ["text"]
 
     def clean_file(self, file: str) -> str:
+        # check file data type, ext, etc.
         return file
 
     def clean_format(self, format: str) -> bool:
@@ -40,7 +41,9 @@ class Transcriber:
         file = self.clean_file(file)
         language = self.clean_language(language)
         format = self.clean_format(format)
-        return self._transcribe(file, language=language, format=format)
+        text = self._transcribe(file, language=language, format=format)
+        logger.info(f"transcript:\n{text}\n")
+        return text
 
 
 class AssemblyAITranscriber(Transcriber):
@@ -233,16 +236,18 @@ class FasterWhisperTranscriber(Transcriber):
         lines = []
         if format in ["text", "txt"]:
             for seg in segments:
-                line = seg.text.strip()
-                if line:
-                    lines.append(line)
-                return "\n".join(lines).strip()
+                lines.append(seg.text.strip())
         elif format in ["srt"]:
             for i, seg in enumerate(segments, start=1):
-                lines.append(str(i))
-                lines.append(f"{sec2ts(int(seg.start))} --> {sec2ts(int(seg.end))}")
-                lines.append(seg.text.strip())
-                return "\n".join(lines).strip()
+                parts = [
+                    str(i),
+                    f"{sec2ts(seg.start)} --> {sec2ts(seg.end)}",
+                    seg.text.strip(),
+                ]
+                caption = "\n".join(parts) + "\n"
+                lines.append(caption)
+
+        return "\n".join(lines).strip()
 
 
 class FasterWhisperCPUTranscriber(FasterWhisperTranscriber):
