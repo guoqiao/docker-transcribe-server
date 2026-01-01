@@ -3,9 +3,12 @@
 set -ueo pipefail
 
 file=${1:-data/audio.mp3}
+format=${2:-text}
+language=${3:-zh}
 
 curl -s -X POST "http://localhost:8000/v1/audio/transcriptions" \
     -H "Content-Type: multipart/form-data" \
-    -F "language=zh" \
-    -F "response_format=srt" \
-    -F "file=@${file}" | jq -r
+    -F "file=@${file}" \
+    -F "response_format=${format}" \
+    -F "language=${language}" \
+    | jq -r
